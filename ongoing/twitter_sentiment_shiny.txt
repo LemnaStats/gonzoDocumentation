@@ -20,3 +20,11 @@ https://github.com/LemnaStats/TwitterSentiment
 
 Done!
 
+Now let's design the site. I'm looking to take the following information:
+
+* A list of queries the searches
+* A list of filtered words
+
+And spit out:
+
+* A bar graph of the sentiment rating for each search
