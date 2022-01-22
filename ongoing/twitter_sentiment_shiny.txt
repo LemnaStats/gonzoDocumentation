@@ -1,0 +1,22 @@
+I want to create a shiny app for my past project on twitter sentiment. There are some caveats:
+
+* I have never made a shiny app before
+* I don't know how to do this
+
+The reason I want to do it with Shiny is because the original functions were written in R. I feel like that's the most natural way to do it, or it 
+has to be. Not sure though.
+
+How am I going to go about this?
+
+1. Plan the site visually
+2. Review the scripts I currently
+3. Make the site according to the plan
+
+I am also going to use Github this time around! It'll make it easier for me to review my code.
+
+First, let's upload what I currently have to a github repository.
+
+https://github.com/LemnaStats/TwitterSentiment
+
+Done!
+
