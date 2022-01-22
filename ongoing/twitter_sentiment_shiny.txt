@@ -22,9 +22,16 @@ Done!
 
 Now let's design the site. I'm looking to take the following information:
 
-* A list of queries the searches
+* A a single search query
 * A list of filtered words
 
 And spit out:
 
-* A bar graph of the sentiment rating for each search
+* Sentiment score
+* A word cloud
+* A bar graph (pie chart?) of the number of positive, negative, and neutral tweets of the 100
+* A download link
+
+PART 1: Make plan
+
+The first step I want to do is create a visual plan for the app. I'm going to do this in inkscape.
