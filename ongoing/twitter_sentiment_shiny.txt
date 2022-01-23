@@ -48,3 +48,55 @@ The first step will be to create an input for the list of filtered words. I'm go
 
 1. Take a string with semicolon separation and make it into a string vector
 2. Redo the scripts I currently have to take the string vector as an input
+
+I'm going to modify the text amalgamator to take a filter:
+
+text_amalgamator <- function(data,filters){
+scorp_words <- data$text
+scorp <- str_replace_all(scorp_words, "[^[:alnum:]]", " ")
+scorp <- paste(scorp, collapse = " ")
+scorp <- str_split(scorp," ") %>% unlist() %>% as.data.frame()
+colnames(scorp) <- c("word")
+scorp$word <- tolower(scorp$word)
+bad <- filters
+scorp <- scorp %>% filter(., !(word %in% bad))
+scorp_count <- scorp %>% count(word)
+scorp_count
+
+scorp_count <- merge.data.frame(scorp_count,afinn)
+scorp_count <- mutate(scorp_count, score = n * value)
+scorp_count <- tibble(scorp_count)
+return(scorp_count) }
+
+And I'm going to use - wait for it - github features to keep track of this! I'm going to make this as a pull request after testing that it works.
+
+Let's review the various machines I have working right now:
+
+* searchTwitterTextAndTimeStamp, which pulls tweets from twitter using my API keys. Takes a search and a pull count, up to 100. Outputs a table of tweets.
+* text_amalgamator, which takes the twitter output and makes it into a sentiment table. Takes a table of tweets and a filtered list. Outputs a sentiment table
+* twitter_sentiment, which combines the two functions above. Takes a search and a filtered word list. Outputs a sentiment table.
+* count_tester, which determines what words should be counted for the yes/no counts
+* conduct_sentiment, which takes a query and a filtered word list and outputs a line analysing the sentiment for the search
+* analyse_sentiment, which takes a query and a sentiment table and outputs a line analysing the sentiment for the search
+* many_sentiments, which takes a tibble of queries and a filtered word list and outputs a table of sentiment lines (via analyse_sentiment), a sentiment table for each search, and a table of tweets for each search
+
+What I want is one function that takes:
+
+* A search query (one)
+* A filtered word list
+
+And outputs:
+
+* A sentiment score
+* A count of emotionally-charged words
+* A count of tweets (these two points will be linked together in a sentence - "found n sentiment-indicating words in m tweets"
+* An average sentiment score
+* A median sentiment score
+* A bar chart of the % of tweets that are positive, negative, and neutral
+* A word cloud of the most common words
+* The table of tweets
+* The sentiment table
+
+I'm thinking of doing a histogram instead of the bar chart and a bar chart instead of the word cloud. We'll run some tests and see.
+
+
