@@ -35,3 +35,16 @@ And spit out:
 PART 1: Make plan
 
 The first step I want to do is create a visual plan for the app. I'm going to do this in inkscape.
+
+https://github.com/LemnaStats/TwitterSentiment/blob/main/twitterSentimentMap.png
+
+Done! Now I have  I've also added two additional output fields: an average and median sentiment score.
+
+PART 2: Build the underlying functionality
+
+I would like to build out the underlying functions first before I put together the website.
+
+The first step will be to create an input for the list of filtered words. I'm going to break this down into two steps:
+
+1. Take a string with semicolon separation and make it into a string vector
+2. Redo the scripts I currently have to take the string vector as an input
