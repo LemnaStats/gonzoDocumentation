@@ -80,6 +80,15 @@ Let's review the various machines I have working right now:
 * analyse_sentiment, which takes a query and a sentiment table and outputs a line analysing the sentiment for the search
 * many_sentiments, which takes a tibble of queries and a filtered word list and outputs a table of sentiment lines (via analyse_sentiment), a sentiment table for each search, and a table of tweets for each search
 
+Sentiment lines, for my own reference, contain:
+
+* The query
+* The count of meaningful words
+* A count of yeses
+* A count of nos
+* An overall sentiment score score
+* A list of common words
+
 What I want is one function that takes:
 
 * A search query (one)
@@ -87,16 +96,114 @@ What I want is one function that takes:
 
 And outputs:
 
-* A sentiment score
-* A count of emotionally-charged words
-* A count of tweets (these two points will be linked together in a sentence - "found n sentiment-indicating words in m tweets"
+* A sentiment score - DONE
+* A count of emotionally-charged words - DONE
+* A count of tweets (these two points will be linked together in a sentence - "found n sentiment-indicating words in m tweets")
 * An average sentiment score
 * A median sentiment score
 * A bar chart of the % of tweets that are positive, negative, and neutral
 * A word cloud of the most common words
-* The table of tweets
-* The sentiment table
+* The table of tweets - DONE
+* The sentiment table - DONE
 
 I'm thinking of doing a histogram instead of the bar chart and a bar chart instead of the word cloud. We'll run some tests and see.
 
+I've confirmed that the many_sentiments function still works. I'll use this function as the base. It can take a single query or multiple, so I'll just leave it as unclean for now. 
+
+The tweet count is easy - I just throw this line into the analyse_sentiments function:
+
+  gem_tibble$tweet_count <- nrow(tweets)
+  
+The average sentiment score also easy:
+
+  gem_tibble$tweet_count <- nrow(tweets)
+
+Our checklist is now:
+
+* A sentiment score - DONE
+* A count of emotionally-charged words - DONE
+* A count of tweets (these two points will be linked together in a sentence - "found n sentiment-indicating words in m tweets") - DONE
+* An average sentiment score - DONE
+* A median sentiment score
+* A bar chart of the % of tweets that are positive, negative, and neutral
+* A word cloud of the most common words
+* The table of tweets - DONE
+* The sentiment table - DONE
+
+That's fun!
+
+Now I'm going to have to go higher up and calculate the sentiment for each invidual tweet. The goal here is:
+* Take an individual string (a tweet) and split it up into words
+* Match each word to the AFINN list
+* Sum the total score
+
+Text_amalgamator already does most of this, so let's modify it to take a string and spit out a single variable.
+
+single_tweet_sentiment <- function(string,bad){
+  scorp_words <- string
+  afinn <- get_sentiments("afinn")
+  scorp <- str_replace_all(scorp_words, "[^[:alnum:]]", " ")
+  scorp <- paste(scorp, collapse = " ")
+  scorp <- str_split(scorp," ") %>% unlist() %>% as.data.frame()
+  colnames(scorp) <- c("word")
+  scorp$word <- tolower(scorp$word)
+  scorp <- scorp %>% filter(., !(word %in% bad))
+  scorp_count <- scorp %>% count(word)
+  scorp_count <- merge.data.frame(scorp_count,afinn)
+  scorp_count <- mutate(scorp_count, score = n * value)
+  return(scorp_count$score) }
+  
+  Hacky but it'll work.
+  
+  I wrote the above text yesterday, and then spent the rest of the day figuring out that it, in fact, did not work. I did not run the right tests on it. It spit out a bunch of individual scores for words instead of one overall score.
+  
+  I fixed it:
+  
+  single_tweet_sentiment <- function(string,bad){
+  scorp_words <- string
+  afinn <- get_sentiments("afinn")
+  scorp <- str_replace_all(scorp_words, "[^[:alnum:]]", " ")
+  scorp <- paste(scorp, collapse = " ")
+  scorp <- str_split(scorp," ") %>% unlist() %>% as.data.frame()
+  colnames(scorp) <- c("word")
+  scorp$word <- tolower(scorp$word)
+  scorp <- scorp %>% filter(., !(word %in% bad))
+  scorp_count <- scorp %>% count(word)
+  scorp_count <- merge.data.frame(scorp_count,afinn)
+  scorp_count <- mutate(scorp_count, score = n * value)
+  final_score <- scorp_count$score %>% sum()
+  return(final_score) }
+  
+  And then I vectorized it:
+
+stsvect <- Vectorize(single_tweet_sentiment, vectorize.args = "string")
+
+Vectorization being a thing I only learned to do upon researching why my mutate() wasn't working.
+
+Let's modify many_sentiments to add this to the tweets table:
+
+sentiment_cannon <- function(query_list,filtered_words){
+  #setup
+    results_tibble <- tibble(query=character(),word_count=integer(),
+                             yes_count=integer(),no_count=integer(),
+                             score=integer(),common_words=character())
+    tweet_table_list <- list(results_tibble)
+    names(tweet_table_list) <- c(query_list[[1]])
+    sentiment_table_list <- list(results_tibble)
+    names(sentiment_table_list) <- c(query_list[[1]])
+  
+  #core cannon
+    tweets <- searchTwitterTextAndTimestamp(item,100)
+    tweets <- mutate(tweets, score = stsvect(text,filtered_words))
+    sentis <- text_amalgamator(tweets,filtered_words)
+    new_row <- analyse_sentiment(item,sentis,tweets,filtered_words)
+    results_tibble <- rbind(results_tibble,new_row)
+    tweet_table_list[[item]] <- tweets
+    sentiment_table_list[[item]] <- sentis
+    
+  #returning results  
+  master_list <- list(results_tibble,tweet_table_list,sentiment_table_list)
+  names(master_list) <- c("sentiments","tweets","word lists")
+  return(master_list)
+}
 
