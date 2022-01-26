@@ -249,3 +249,17 @@ I have never made a shiny app before. First time for everything!
 
 It seems like the process is pretty simple. It takes a bunch of inputs and plops them into an input table. It takes a bunch of outputs and plops them into an output table. So I have to take the two inputs, a bunch of outputs, and make it all work.
 
+Let's start with the two inputs.
+
+        textInput("query",NULL,placeholder="Enter search terms here"),
+
+
+        textInput("filters",NULL,placeholder =
+                      "Filtered Words (separate with a semicolon,e.g.'bread,toast'"),
+                      
+
+That works, but the entry bars are narrow. Whatever. I'll make sure the functionality works before making it pretty.
+
+
+
+
