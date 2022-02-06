@@ -260,6 +260,12 @@ Let's start with the two inputs.
 
 That works, but the entry bars are narrow. Whatever. I'll make sure the functionality works before making it pretty.
 
+Feb 5
 
+The problem is that the functionality doesn't work. The app literally will not load unless I take out the operational features on the server side.
 
+I keep getting this error:
+  cannot coerce type 'closure' to vector of type 'character'
+  
+I got a different error before adding wrappers to the input variable. I am losing my mind.
 
