@@ -269,3 +269,5 @@ I keep getting this error:
   
 I got a different error before adding wrappers to the input variable. I am losing my mind.
 
+Based on further research the issue is something to do with my call to the function. I have tried wrapping the function in reactiveUI(), but now I can't call the function. Also my button doesn't work. Frustrating!
+
