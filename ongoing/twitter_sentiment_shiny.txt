@@ -271,3 +271,11 @@ I got a different error before adding wrappers to the input variable. I am losin
 
 Based on further research the issue is something to do with my call to the function. I have tried wrapping the function in reactiveUI(), but now I can't call the function. Also my button doesn't work. Frustrating!
 
+Upon further research, it looks like I need to write the data somewhere. This means that now the button has to:
+
+* Call the function and generate data
+* Write data somewhere
+* Read the data back in
+* Generate outputs
+
+Once again, I don't know how I'm going to do this.
