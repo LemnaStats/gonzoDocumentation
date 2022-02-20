@@ -279,3 +279,7 @@ Upon further research, it looks like I need to write the data somewhere. This me
 * Generate outputs
 
 Once again, I don't know how I'm going to do this.
+
+Let's see what the internet says!
+
+https://shiny.rstudio.com/articles/persistent-data-storage.html
