@@ -283,3 +283,5 @@ Once again, I don't know how I'm going to do this.
 Let's see what the internet says!
 
 https://shiny.rstudio.com/articles/persistent-data-storage.html
+
+Given that I export my output as a list, it would be best if I stored my output in a list-friendly filetype. Ideally I want to save all of the data in one file in one go.
