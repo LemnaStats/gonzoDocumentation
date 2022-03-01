@@ -285,3 +285,15 @@ Let's see what the internet says!
 https://shiny.rstudio.com/articles/persistent-data-storage.html
 
 Given that I export my output as a list, it would be best if I stored my output in a list-friendly filetype. Ideally I want to save all of the data in one file in one go.
+
+
+2/27
+
+I have returned to this project and completed it! I've updated the directory with the new code. It works locally, but not on shinyapps.io. One day I will figure out a way to host files on Dropbox.
+
+My solutions were as follows:
+* Write a CSV of the initial small table
+* Generate PNGs of the two graphs
+* Read it all back into Shiny
+
+The problem with online hosting is the pngs. I can't figure out a good way to save just the image files. Possibly the solution here is to redo the code so that I save the relevant data as .csv files and generate the graphs in-app. A problem for another day.
